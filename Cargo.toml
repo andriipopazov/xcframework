@@ -25,3 +25,6 @@ xflags = "0.3"
 
 [dev-dependencies]
 tempfile = "3.3"
+
+[patch.crates-io]
+zip-extensions = { git = "https://github.com/andriipopazov/zip-extensions-rs", rev = "c3556d757574d4d00ee65a3f0c726b45ba44876f" }
