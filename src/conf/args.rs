@@ -43,6 +43,8 @@ xflags::xflags! {
         /// Path to Cargo.toml.
         optional --manifest-path manifest_path: Utf8PathBuf
 
+        /// Path to swift files.
+        optional --swift-paths swift_paths: Utf8PathBuf
     }
 }
 
@@ -63,6 +65,7 @@ pub struct Xcframework {
     pub no_default_features: bool,
     pub target_dir: Option<Utf8PathBuf>,
     pub manifest_path: Option<Utf8PathBuf>,
+    pub swift_paths: Option<Utf8PathBuf>,
 }
 
 impl Xcframework {

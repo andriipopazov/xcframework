@@ -79,6 +79,8 @@ pub fn build(conf: &Configuration) -> Result<Produced> {
             let frameworks_dir = conf.target_dir.join("frameworks");
             frameworks_dir.mkdirs()?;
 
+            let swifts = conf.swift_paths.clone();
+
             core::wrap_as_framework(
                 platform,
                 crate_type,
@@ -87,6 +89,7 @@ pub fn build(conf: &Configuration) -> Result<Produced> {
                 module_path,
                 &bundle_name,
                 &frameworks_dir,
+                Some(vec![swifts.unwrap().clone()]),
             )
         })
         .collect::<anyhow::Result<Vec<_>>>()

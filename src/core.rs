@@ -22,6 +22,7 @@ pub fn lipo_create_platform_libraries(
     output_lib_name: &str,
     output_dir: &Utf8PathBuf,
 ) -> anyhow::Result<HashMap<ApplePlatform, Utf8PathBuf>> {
+    println!("🍭 Q---------");
     let sh = Shell::new()?;
     output_dir.mkdirs()?;
 
@@ -62,10 +63,13 @@ pub fn wrap_as_framework(
     module_path: Utf8PathBuf,
     bundle_name: &str,
     output_dir: &Utf8PathBuf,
+    swift_paths: Option<Vec<Utf8PathBuf>>,
 ) -> anyhow::Result<Utf8PathBuf> {
     const SUFFIX: &str = ".framework";
 
     println!("📦 Wrapping {:?} libraries as framework ...", platform);
+
+    println!("📦 Swift files are: ... {:?}", swift_paths);
 
     let sh = Shell::new()?;
 
@@ -111,6 +115,18 @@ pub fn wrap_as_framework(
 
     let module_dest = output_path.join("Modules").join("module.modulemap");
     module_path.cp(module_dest)?;
+
+    if swift_paths.is_some() {
+        let paths = swift_paths.unwrap();
+
+        let swift_dir = output_path.join("Sources");
+        swift_dir.mkdirs()?;
+
+        for swift_file in paths.iter() {
+            let file_name = swift_file.file_name().context("swift file path error")?;
+            swift_file.cp(swift_dir.join(file_name))?;
+        }
+    }
 
     println!(
         "✅ Wrapped artifacts as framework success, output:\n{}",

@@ -16,6 +16,7 @@ pub struct Configuration {
     pub target_dir: Utf8PathBuf,
     /// Directory where the xcframework will be built
     pub build_dir: Utf8PathBuf,
+    pub swift_paths: Option<Utf8PathBuf>,
 }
 
 impl Configuration {
@@ -24,6 +25,7 @@ impl Configuration {
         package: &Package,
         mut cli: CliArgs,
         xc_conf: XCFrameworkConfiguration,
+        swift_paths: Option<Utf8PathBuf>
     ) -> Result<Self> {
         // Use the target directory from the CLI, or the one from the Cargo.toml
         let target_dir = cli
@@ -58,6 +60,7 @@ impl Configuration {
             lib_name: target.name.clone(),
             target_dir,
             build_dir,
+            swift_paths,
         })
     }
 
@@ -90,7 +93,9 @@ impl Configuration {
         let xc_conf = XCFrameworkConfiguration::parse(section, &dir, true)
             .context("Error in Cargo.toml section [package.metadata.xcframework]")?;
 
-        Self::new(&metadata, package, cli, xc_conf)
+        let swift_paths = cli.swift_paths.clone();
+
+        Self::new(&metadata, package, cli, xc_conf, swift_paths)
     }
 
     pub fn module_name(&self) -> Result<String> {
