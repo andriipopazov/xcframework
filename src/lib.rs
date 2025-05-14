@@ -79,7 +79,9 @@ pub fn build(conf: &Configuration) -> Result<Produced> {
             let frameworks_dir = conf.target_dir.join("frameworks");
             frameworks_dir.mkdirs()?;
 
-            let swifts = conf.swift_paths.clone();
+            let optional_swift = conf.swift_paths.clone();
+            println!("Path for includes: {:?} {:?}", include_dir, optional_swift);
+            let swift_files = optional_swift.unwrap_or_default();;
 
             core::wrap_as_framework(
                 platform,
@@ -89,7 +91,7 @@ pub fn build(conf: &Configuration) -> Result<Produced> {
                 module_path,
                 &bundle_name,
                 &frameworks_dir,
-                Some(vec![swifts.unwrap().clone()]),
+                vec![swift_files],
             )
         })
         .collect::<anyhow::Result<Vec<_>>>()

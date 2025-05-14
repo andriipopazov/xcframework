@@ -40,6 +40,8 @@ fn end_to_end_static() {
         "staticlib",
         "--target-dir",
         target_dir.as_str(),
+        "--swift-paths",
+        "ffi/include/sdk.swift"
     ]);
 
     let produced = xcframework::build_from_cli(cli).unwrap();
